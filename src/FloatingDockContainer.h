@@ -200,7 +200,6 @@ protected: // reimplements QWidget
 #endif
 #endif
 
-
 public:
 	using Super = tFloatingWidgetBase;
 

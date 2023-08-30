@@ -69,6 +69,7 @@ private:
 	friend class CDockManager;
 	friend class CAutoHideDockContainer;
 	void onDockWidgetFeaturesChanged();
+	int id = -1;
 
 private Q_SLOTS:
 	void onTabCloseRequested(int Index);
@@ -178,6 +179,10 @@ protected Q_SLOTS:
 
 public:
 	using Super = QFrame;
+	static unsigned int counter;
+
+	void set_id(int id_) { this->id = id_; };
+	int get_id() { return this->id; }
 
 	/**
 	 * Dock area related flags
@@ -220,6 +225,7 @@ public:
 	 * Returns true if the dock area is in an auto hide container
 	 */
 	bool isAutoHide() const;
+
 
 	/**
 	 * Sets the current auto hide dock container
@@ -400,7 +406,7 @@ public Q_SLOTS:
 	 * If the dock area is switched to auto hide mode, then all dock widgets
 	 * that are pinable will be added to the sidebar
 	 */
-	void setAutoHide(bool Enable, SideBarLocation Location = SideBarNone, int TabIndex = -1);
+	void setAutoHide(bool Enable, SideBarLocation Location = SideBarNone);
 
 	/**
 	 * Switches the dock area to auto hide mode or vice versa depending on its
@@ -413,13 +419,8 @@ public Q_SLOTS:
 	 */
 	void closeOtherAreas();
 
-	/**
-	 * Moves the dock area into its own floating widget if the area
-	 * DockWidgetFloatable flag is true
-	 */
-	void setFloating();
-
 Q_SIGNALS:
+
 	/**
 	 * This signal is emitted when user clicks on a tab at an index.
 	 */

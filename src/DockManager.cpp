@@ -539,8 +539,11 @@ CDockManager::~CDockManager()
     }
     for ( auto area : areas )
     {
-        for ( auto widget : area->dockWidgets() )
-            delete widget;
+		for (auto widget : area->dockWidgets()) {
+			// node editors are already freed
+			if (widget->get_widget_type() == WidgetType::NodeEditor) { continue; }
+			delete widget;
+		}
 
         delete area;
     }
@@ -760,6 +763,10 @@ QByteArray CDockManager::saveState(int version) const
     	? qCompress(xmldata, 9) : xmldata;
 }
 
+QMap<QString, CDockWidget*>& CDockManager::get_widgets()
+{
+	return this->d->DockWidgetsMap;
+}
 
 //============================================================================
 bool CDockManager::restoreState(const QByteArray &state, int version)
@@ -1285,7 +1292,7 @@ void CDockManager::hideManagerAndFloatingWidgets()
 			d->HiddenFloatingWidgets.push_back( FloatingWidget );
 			FloatingWidget->hide();
 
-			// hiding floating widget automatically marked contained CDockWidgets as hidden
+			// hidding floating widget automatically marked contained CDockWidgets as hidden
 			// but they must remain marked as visible as we want them to be restored visible
 			// when CDockManager will be shown back
 			for ( auto dockWidget : VisibleWidgets )
